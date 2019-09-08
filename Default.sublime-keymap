@@ -1,0 +1,8 @@
+[
+   { "keys": ["ctrl+shift+y"], "command": "add_current_folder_to_project_mount"},
+   { "keys": ["ctrl+shift+x"], "command": "remove_current_folder_from_project_mount"},
+   { "keys": ["ctrl+shift+1"], "command": "switch_to_project_mount", "args": { "mount": "1" }},
+   { "keys": ["ctrl+shift+2"], "command": "switch_to_project_mount", "args": { "mount": "2" }},
+   { "keys": ["ctrl+shift+3"], "command": "switch_to_project_mount", "args": { "mount": "3" }},
+   { "keys": ["ctrl+shift+0"], "command": "cleanup_project_mounts"},
+]
