@@ -10,6 +10,10 @@ class SwitchToProjectMountCommand(sublime_plugin.WindowCommand):
         win = sublime.active_window()
         data = win.project_data()
 
+        if not data or 'folders' not in data:
+            print("Open a project first")
+            return
+
         if 'folders_0' not in data:
             data['folders_0'] = copy.deepcopy(data['folders'])
 
@@ -24,9 +28,18 @@ class SwitchToProjectMountCommand(sublime_plugin.WindowCommand):
 
 class ProjectMountCommend(sublime_plugin.WindowCommand):
     def init(self):
-        file_name = self.window.active_view().file_name()
+        view = self.window.active_view()
+        if view is None or view.file_name() is None:
+            print("Open a file first")
+            return False
+
+        file_name = view.file_name()
         self.folder = os.path.abspath(os.path.dirname(file_name))
         self.data = sublime.active_window().project_data()
+
+        if not self.data or 'folders' not in self.data:
+            print("Open a project first")
+            return False
 
         # Create backup (if not preset yet)
         if 'folders_0' not in self.data:
@@ -44,9 +57,12 @@ class ProjectMountCommend(sublime_plugin.WindowCommand):
             #self.data[self.foldersKey] = copy.deepcopy(self.data['folders'])
             self.data[self.foldersKey] = []
 
+        return True
+
 class AddCurrentFolderToProjectMountCommand(ProjectMountCommend):
     def run(self):
-        self.init()
+        if not self.init():
+            return
 
         # Add folder (if not preset yet)
         found = False
@@ -62,7 +78,8 @@ class AddCurrentFolderToProjectMountCommand(ProjectMountCommend):
 
 class RemoveCurrentFolderFromProjectMountCommand(ProjectMountCommend):
     def run(self):
-        self.init()
+        if not self.init():
+            return
 
         temp = None
         for folders in self.data[self.foldersKey]:
@@ -79,6 +96,10 @@ class CleanupProjectMountsCommand(sublime_plugin.WindowCommand):
     def run(self):
         win = sublime.active_window()
         data = win.project_data()
+
+        if not data:
+            print("Open a project first")
+            return
 
         if 'folders_0' in data:
             print('Found folders_0!')
